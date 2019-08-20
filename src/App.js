@@ -34,7 +34,7 @@ function App() {
       console.log('uploaded', e.loaded / e.total, '%');
       
     }).then(res=> console.log('upload done'))
-     .catch(err=> console.log('upload failed with', err));
+      .catch(err=> console.log('upload failed with', err));
   };
   
   return (
@@ -55,9 +55,13 @@ function App() {
                 Upload
               </button>
               {
-                films.map(film => (
-                  <div key={film.Key}>{film.Key}</div>
-                ))
+                films.filter(film=> film.Key.match(/\.png$/))
+                     .map(film => (
+                       <div key={film.Key}>
+                         <img style={{ height: 100, width: 'auto' }}
+                              src={'https://3k92h7oq73.execute-api.us-west-2.amazonaws.com/test/files?key='+film.Key}/>
+                       </div>
+                     ))
               }
             </div>
         )}
