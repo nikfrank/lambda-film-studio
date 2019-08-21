@@ -40,6 +40,7 @@ function App() {
   const [ isLoggedIn, setIsLoggedIn ] = useState(false);
   const [ password, setPassword ] = useState('');
   const [ films, setFilms ] = useState([]);
+  const [ video, setVideo ] = userState('');
 
   const loadStills = ()=> fetch('/test/film-list').then(response => response.json())
                                                   .then(stills=> setFilms( groupStills(stills.Contents) ));
@@ -74,6 +75,15 @@ function App() {
         ).catch(err=> console.log('upload failed with', err));
       });
   };
+
+  const triggerConcat = ()=> {
+    fetch('/test/concat', {
+      method: 'POST',
+      body: JSON.stringify({ films: films.map(film=> film.slug ) }),
+      credentials: 'include',
+    }).then(response => response.text())
+      .then(videoName => console.log(videoName) || setVideo(videoName) );
+  }
 
   const onDragEnd = result => {
     if (!result.destination) return;
@@ -151,6 +161,12 @@ function App() {
               </DragDropContext>
             </div>
         )}
+
+        { videoName ? (
+            <video controls>
+              <source src={videoName} type="video/mp4"/>
+            </video>
+        ) : null }
       </header>
     </div>
   );
