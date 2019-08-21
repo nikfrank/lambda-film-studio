@@ -162,6 +162,7 @@ function App() {
             </div>
         )}
 
+        <button onClick={triggerConcat}>COMBINE!</button>
         { videoName ? (
             <video controls>
               <source src={'/'+videoName} type="video/mp4"/>
