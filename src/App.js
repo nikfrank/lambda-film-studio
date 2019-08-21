@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import { futch } from './futch';
 
@@ -18,6 +19,24 @@ const groupStills = allFiles => {
   return slugs.map(slug => ({ slug, stills: filenames.filter(filename=> filename.match(new RegExp(slug + '-out\\d\\.png'))) }));
 };
 
+const getListStyle = isDraggingOver => ({
+  background: isDraggingOver ? "lightblue" : "lightgrey",
+  minHeight: 500
+});
+
+const getItemStyle = (isDragging, draggableStyle) => ({
+  userSelect: "none",
+  background: isDragging ? "lightgreen" : "grey",
+  ...draggableStyle
+});
+
+const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+};
 
 function App() {
   const [ isLoggedIn, setIsLoggedIn ] = useState(false);
@@ -47,6 +66,18 @@ function App() {
     }).then(res=> console.log('upload done'))
       .catch(err=> console.log('upload failed with', err));
   };
+
+  const onDragEnd = result => {
+    if (!result.destination) return;
+
+    const nextFilms = reorder(
+      films,
+      result.source.index,
+      result.destination.index
+    );
+
+    setFilms(nextFilms);
+  };
   
   return (
     <div className="App">
@@ -66,21 +97,51 @@ function App() {
                 Upload
               </button>
 
-              {films.map(film => (
-                <div className='film-strip' key={film.slug}>
-                  <div className='edge'/>
-                  <div className='strip'>
-                    {
-                      film.stills.map(still => (
-                        <div key={still} className='cell'>
-                          <img alt='' src={'https://3k92h7oq73.execute-api.us-west-2.amazonaws.com/test/files?key='+still}/>
-                        </div>
-                      ))
-                    }
-                  </div>
-                  <div className='edge'/>
-                </div>
-              ))}
+              
+              <DragDropContext onDragEnd={onDragEnd}>
+                <Droppable droppableId="droppable">
+                  {(provided, snapshot) => (
+                    <div
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      style={getListStyle(snapshot.isDraggingOver)}>
+                      
+                      {films.map((film, fi) => (
+                        <Draggable key={film.slug} draggableId={film.slug} index={fi}>
+                          {(provided, snapshot) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              style={getItemStyle(
+                                  snapshot.isDragging,
+                                  provided.draggableProps.style
+                              )}
+                              >
+                              <div className='film-strip'>
+                                <div className='edge'/>
+                                <div className='strip'>
+                                  {
+                                    film.stills.map(still => (
+                                      <div key={still} className='cell'>
+                                        {still}
+                                        <img alt=''
+                                             src={'https://3k92h7oq73.execute-api.us-west-2.amazonaws.com/test/files?key='+still}/>
+                                      </div>
+                                    ))
+                                  }
+                                </div>
+                                <div className='edge'/>
+                              </div>
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </DragDropContext>
             </div>
         )}
       </header>
