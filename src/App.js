@@ -163,7 +163,7 @@ function App() {
               <button onClick={triggerConcat}>COMBINE!</button>
               { videoName ? (
                   <video controls>
-                    <source src={'/'+videoName} type="video/mp4"/>
+                    <source src={'/test/files?key='+videoName} type="video/mp4"/>
                   </video>
               ) : null }
             </div>
