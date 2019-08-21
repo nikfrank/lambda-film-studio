@@ -70,8 +70,8 @@ function App() {
         }, e=> {
           console.log('uploaded', e.loaded / e.total, '%');
           
-        }).then(res=> (console.log('upload done'), loadStills()))
-          .catch(err=> console.log('upload failed with', err));
+        }).then(res=> setTimeout(loadStills, 8000)
+        ).catch(err=> console.log('upload failed with', err));
       });
   };
 
