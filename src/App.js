@@ -79,7 +79,7 @@ function App() {
   const triggerConcat = ()=> {
     fetch('/test/concat', {
       method: 'POST',
-      body: JSON.stringify({ films: films.map(film=> film.slug ) }),
+      body: JSON.stringify({ films: films.map(film=> film.slug+'.mp4' ) }),
       credentials: 'include',
     }).then(response => response.text())
       .then(name => console.log(name) || setVideoName(name) );
@@ -159,15 +159,16 @@ function App() {
                   )}
                 </Droppable>
               </DragDropContext>
+
+              <button onClick={triggerConcat}>COMBINE!</button>
+              { videoName ? (
+                  <video controls>
+                    <source src={'/'+videoName} type="video/mp4"/>
+                  </video>
+              ) : null }
             </div>
         )}
 
-        <button onClick={triggerConcat}>COMBINE!</button>
-        { videoName ? (
-            <video controls>
-              <source src={'/'+videoName} type="video/mp4"/>
-            </video>
-        ) : null }
       </header>
     </div>
   );
