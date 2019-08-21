@@ -8,6 +8,17 @@ import stub from './stub';
 
 const url = 'testing url';
 
+const groupStills = allFiles => {
+  const filenames = allFiles.map(file => file.Key).filter(filename=> filename.match(/-out\d+\.png/));
+
+  const slugs = Array.from(new Set(
+    filenames.map(filename=> filename.slice(0, filename.lastIndexOf('-out')))
+  ));
+
+  return slugs.map(slug => ({ slug, stills: filenames.filter(filename=> filename.match(new RegExp(slug + '-out\\d\\.png'))) }));
+};
+
+
 function App() {
   const [ isLoggedIn, setIsLoggedIn ] = useState(false);
   const [ password, setPassword ] = useState('');
@@ -16,7 +27,7 @@ function App() {
   const login = ()=> Promise.resolve().then(()=> setIsLoggedIn( true ));
 
 
-  useEffect(()=> setFilms( stub.Contents ), []);
+  useEffect(()=> setFilms( groupStills(stub.Contents) ), []);
 
   const upload = ()=>{
     const body = new FormData();
@@ -54,22 +65,22 @@ function App() {
               <button onClick={upload}>
                 Upload
               </button>
-              
-              <div className='film-strip'>
-                <div className='edge'/>
-                <div className='strip'>
-                {
-                  films.filter(film=> film.Key.match(/\.png$/))
-                       .slice(0, 3)
-                       .map(film => (
-                         <div key={film.Key} className='cell'>
-                           <img alt='' src={'https://3k92h7oq73.execute-api.us-west-2.amazonaws.com/test/files?key='+film.Key}/>
-                         </div>
-                       ))
-                }
+
+              {films.map(film => (
+                <div className='film-strip' key={film.slug}>
+                  <div className='edge'/>
+                  <div className='strip'>
+                    {
+                      film.stills.map(still => (
+                        <div key={still} className='cell'>
+                          <img alt='' src={'https://3k92h7oq73.execute-api.us-west-2.amazonaws.com/test/files?key='+still}/>
+                        </div>
+                      ))
+                    }
+                  </div>
+                  <div className='edge'/>
                 </div>
-                <div className='edge'/>
-              </div>
+              ))}
             </div>
         )}
       </header>
