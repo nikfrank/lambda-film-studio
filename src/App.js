@@ -54,15 +54,22 @@ function App() {
               <button onClick={upload}>
                 Upload
               </button>
-              {
-                films.filter(film=> film.Key.match(/\.png$/))
-                     .map(film => (
-                       <div key={film.Key}>
-                         <img style={{ height: 100, width: 'auto' }}
-                              src={'https://3k92h7oq73.execute-api.us-west-2.amazonaws.com/test/files?key='+film.Key}/>
-                       </div>
-                     ))
-              }
+              
+              <div className='film-strip'>
+                <div className='edge'/>
+                <div className='strip'>
+                {
+                  films.filter(film=> film.Key.match(/\.png$/))
+                       .slice(0, 3)
+                       .map(film => (
+                         <div key={film.Key} className='cell'>
+                           <img alt='' src={'https://3k92h7oq73.execute-api.us-west-2.amazonaws.com/test/files?key='+film.Key}/>
+                         </div>
+                       ))
+                }
+                </div>
+                <div className='edge'/>
+              </div>
             </div>
         )}
       </header>
