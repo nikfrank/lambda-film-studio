@@ -40,7 +40,7 @@ function App() {
   const [ isLoggedIn, setIsLoggedIn ] = useState(false);
   const [ password, setPassword ] = useState('');
   const [ films, setFilms ] = useState([]);
-  const [ video, setVideo ] = userState('');
+  const [ videoName, setVideoName ] = useState('');
 
   const loadStills = ()=> fetch('/test/film-list').then(response => response.json())
                                                   .then(stills=> setFilms( groupStills(stills.Contents) ));
@@ -82,7 +82,7 @@ function App() {
       body: JSON.stringify({ films: films.map(film=> film.slug ) }),
       credentials: 'include',
     }).then(response => response.text())
-      .then(videoName => console.log(videoName) || setVideo(videoName) );
+      .then(name => console.log(name) || setVideoName(name) );
   }
 
   const onDragEnd = result => {
@@ -164,7 +164,7 @@ function App() {
 
         { videoName ? (
             <video controls>
-              <source src={videoName} type="video/mp4"/>
+              <source src={'/'+videoName} type="video/mp4"/>
             </video>
         ) : null }
       </header>
