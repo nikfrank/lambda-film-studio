@@ -43,7 +43,11 @@ function App() {
   const [ password, setPassword ] = useState('');
   const [ films, setFilms ] = useState([]);
   
-  const login = ()=> Promise.resolve().then(()=> setIsLoggedIn( true ));
+  const login = ()=> fetch('/test/login', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password })
+
+  }).then(response => response.status > 400 ? console.error(401) : setIsLoggedIn( true ))
 
 
   useEffect(()=> setFilms( groupStills(stub.Contents) ), []);

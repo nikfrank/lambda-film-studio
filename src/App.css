@@ -34,8 +34,7 @@ button {
 
 
 .film-strip {
-  height: 160px;
-  background-color: #5559;
+  height: 150px;
 
   display: flex;
   flex-direction: column;
@@ -47,21 +46,24 @@ button {
 .film-strip .edge {
   background: repeating-linear-gradient(
     90deg,
-    transparent,
-    transparent 4%,
-    black 4%,
-    black 8%
+    black,
+    black 5px,
+    transparent 5px,
+    transparent 15px,
+    black 15px,
+    black 20px
   );
-
-  height: 20px;
-  margin: 5px 0;
+  
+  height: 15px;
+  border-top: 5px solid black;
+  border-bottom: 5px solid black;
 }
-
 
 .film-strip .strip {
   display: flex;
   flex-direction: row;
-  margin: 0 20px;
+  width: 100%;
+  background-color: black;
 }
 
 .film-strip .cell {
