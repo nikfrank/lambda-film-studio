@@ -132,7 +132,6 @@ function App() {
                                   {
                                     film.stills.map(still => (
                                       <div key={still} className='cell'>
-                                        {still}
                                         <img alt=''
                                              src={'https://3k92h7oq73.execute-api.us-west-2.amazonaws.com/test/files?key='+still}/>
                                       </div>
